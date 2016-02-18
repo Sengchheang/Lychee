@@ -1,0 +1,7 @@
+--color
+--format documentation
+--pattern "**/*.feature"
+--default-path features
+# @see https://www.relishapp.com/rspec/rspec-core/v/3-0/docs/command-line/fail-fast
+#--fail-fast
+--order defined
