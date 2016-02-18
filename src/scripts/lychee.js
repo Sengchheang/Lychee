@@ -203,8 +203,7 @@ lychee.load = function() {
 
 		// Show Album
 		if (visible.photo()) view.photo.hide()
-		if (album.json && albumID==album.json.id) view.album.title()
-		else album.load(albumID)
+		album.load(albumID)
 
 	} else {
 
@@ -249,7 +248,7 @@ lychee.setTitle = function(title, editable) {
 
 lychee.setMode = function(mode) {
 
-	$('#button_settings, #button_trash_album, #button_share_album, .button_add, .header__divider').remove()
+	$('#button_settings, #button_trash_album, #button_share_album, .button_sorting, .button_add, .header__divider').remove()
 	$('#button_trash, #button_move, #button_share, #button_star').remove()
 
 	$(document)

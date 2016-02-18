@@ -60,6 +60,7 @@ header.bind = function() {
 		header.dom('.header__search').focus()
 		search.reset()
 	})
+	header.dom('.button_sorting').on('click', settings.setSorting)
 
 	return true
 

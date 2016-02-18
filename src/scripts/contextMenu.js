@@ -27,7 +27,6 @@ contextMenu.settings = function(e) {
 
 	let items = [
 		{ title: build.iconic('person') + 'Change Login', fn: settings.setLogin },
-		{ title: build.iconic('sort-ascending') + 'Change Sorting', fn: settings.setSorting },
 		{ title: build.iconic('dropbox', 'ionicons') + 'Set Dropbox', fn: settings.setDropboxKey },
 		{ },
 		{ title: build.iconic('info') + 'About Lychee', fn: () => window.open(lychee.website) },
