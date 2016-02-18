@@ -1,20 +1,20 @@
 ---
 
 - hosts: "{{ stage }}"
-  remote_user: "{{ ssh_user }}"
+  remote_user: "root"
 
   vars:
     phing_enable: "no"
 
-    public_html_path: "/home/{{ ssh_user }}/public_html"
-    resource_path: "typo3conf/ext/we_sitepackage/Resources/Public"
+    public_html_path: "/var/www/we-photo"
+    # resource_path: "typo3conf/ext/we_sitepackage/Resources/Public"
     php_path: "/opt/php-versions/php55/bin/php"
-    composer_path: "/usr/local/bin/composer"
-    composer_flags: "--no-dev"
+    # composer_path: "/usr/local/bin/composer"
+    # composer_flags: "--no-dev"
 
   tasks:
     - name: Get the dev code from current GIT_COMMIT which is set by jenkins
-      git: repo=git@git.web-essentials.asia:{{ project_id }}/Distribution.git
+      git: repo=https://github.com/Sengchheang/Lychee.git
            dest={{ public_html_path }}
            accept_hostkey=yes
            version={{ version }}
@@ -22,33 +22,33 @@
            update=yes
            force=yes
 
-    - name: Run composer to install dependencies
-      command: "{{ php_path }} {{ composer_path }} install {{ composer_flags }} --prefer-dist --no-interaction chdir={{ public_html_path }}"
+    # - name: Run composer to install dependencies
+    #   command: "{{ php_path }} {{ composer_path }} install {{ composer_flags }} --prefer-dist --no-interaction chdir={{ public_html_path }}"
 
-    - name: Sync compiled resources from build job
-      synchronize: src="../../../../../build/builds/{{ deploy_id }}/Public/"
-                   dest="{{ public_html_path }}/{{ resource_path }}/"
-                   delete=yes
+    # - name: Sync compiled resources from build job
+    #   synchronize: src="../../../../../build/builds/{{ deploy_id }}/Public/"
+    #                dest="{{ public_html_path }}/{{ resource_path }}/"
+    #                delete=yes
 
-    - name: Execute TYPO3 command to update database schema
-      shell: "{{ php_path }} ./typo3cms database:updateschema \"*\" chdir={{ public_html_path }}"
+    # - name: Execute TYPO3 command to update database schema
+    #   shell: "{{ php_path }} ./typo3cms database:updateschema \"*\" chdir={{ public_html_path }}"
 
-    - name: Execute phing to reset content
-      local_action: shell ssh admin-{{ project_id }}@joel "cd /home/admin-{{ project_id }}/ci-phing/ && phing update-content -Dserver={{ stage }} -Dinteractive=false"
-      when: stage != 'latest' and phing_enable == 'yes'
+    # - name: Execute phing to reset content
+    #   local_action: shell ssh admin-{{ project_id }}@joel "cd /home/admin-{{ project_id }}/ci-phing/ && phing update-content -Dserver={{ stage }} -Dinteractive=false"
+    #   when: stage != 'latest' and phing_enable == 'yes'
 
-    - name: Execute TYPO3 command to updates reference index to ensure data integrity
-      shell: "{{ php_path }} ./typo3cms cleanup:updatereferenceindex chdir={{ public_html_path }}"
+    # - name: Execute TYPO3 command to updates reference index to ensure data integrity
+    #   shell: "{{ php_path }} ./typo3cms cleanup:updatereferenceindex chdir={{ public_html_path }}"
 
-    - name: Remove all temporary caches
-      file: name="{{ public_html_path }}/typo3temp/Cache"
-            state=absent
+    # - name: Remove all temporary caches
+    #   file: name="{{ public_html_path }}/typo3temp/Cache"
+    #         state=absent
 
-    - name: Execute TYPO3 command to clear all caches
-      shell: "{{ php_path }} ./typo3cms {{ item }} chdir={{ public_html_path }}"
-      with_items:
-        - cache:flush
-        - cache:warmup
+    # - name: Execute TYPO3 command to clear all caches
+    #   shell: "{{ php_path }} ./typo3cms {{ item }} chdir={{ public_html_path }}"
+    #   with_items:
+    #     - cache:flush
+    #     - cache:warmup
 
     - name: Write version to file
       copy: dest={{ public_html_path }}/version.txt
