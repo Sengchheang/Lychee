@@ -51,6 +51,7 @@ class Admin extends Access {
 			# Settings functions
 			case 'Settings::setLogin':		$this->setLogin(); break;
 			case 'Settings::setSorting':	$this->setSorting(); break;
+			case 'Settings::setFiltering':	$this->setFiltering(); break;
 			case 'Settings::setDropboxKey':	$this->setDropboxKey(); break;
 
 			# $_GET functions
@@ -276,6 +277,19 @@ class Admin extends Access {
 		if (!isset($_POST['oldPassword'])) $_POST['oldPassword'] = '';
 		$this->settings = new Settings($this->database);
 		echo $this->settings->setLogin($_POST['oldPassword'], $_POST['username'], $_POST['password']);
+
+	}
+
+	private function setFiltering() {
+
+		Module::dependencies(isset($_POST['resolution'], $_POST['aspectRatio']));
+		$this->settings = new Settings($this->database);
+
+		$fResolution = $this->settings->setFiltering('filteringResolution', $_POST['resolution']);
+		$fAspectRatio = $this->settings->setFiltering('filteringAspectRatio', $_POST['aspectRatio']);
+
+		if ($fResolution===true&&$fAspectRatio===true)	echo true;
+		else											echo false;
 
 	}
 

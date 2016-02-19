@@ -16,4 +16,6 @@ VALUES
   ('dropboxKey',''),
   ('identifier',''),
   ('skipDuplicates','0'),
-  ('plugins','');
+  ('plugins',''),
+  ('filteringResolution',''),
+  ('filteringAspectRatio','');

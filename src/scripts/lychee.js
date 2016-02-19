@@ -22,6 +22,9 @@ lychee = {
 	sortingAlbums   : '',
 	location        : '',
 
+	filteringResolution : '',
+	filteringAspectRatio: '',
+
 	dropbox         : false,
 	dropboxKey      : '',
 
@@ -52,6 +55,8 @@ lychee.init = function() {
 			lychee.dropboxKey      = data.config.dropboxKey      || ''
 			lychee.location        = data.config.location        || ''
 			lychee.checkForUpdates = data.config.checkForUpdates || '1'
+			lychee.filteringResolution  = data.config.filteringResolution  || ''
+			lychee.filteringAspectRatio = data.config.filteringAspectRatio || ''
 
 			// Show dialog when there is no username and password
 			if (data.config.login===false) settings.createLogin()

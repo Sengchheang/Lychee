@@ -250,6 +250,26 @@ class Settings extends Module {
 
 	}
 
+	public function setFiltering($key, $value) {
+
+		# Check dependencies
+		self::dependencies(isset($this->database, $key, $value));
+
+		# Execute query
+		# Do not prepare $filtering because it is a true statement
+		# Preparing (escaping) the filtering would destroy it
+		# $filtering is save and can't contain user-input
+		$query	= Database::prepare($this->database, "UPDATE ? SET value = '$value' WHERE `key` = '$key'", array(LYCHEE_TABLE_SETTINGS));
+		$result	= $this->database->query($query);
+
+		if (!$result) {
+			Log::error($this->database, __METHOD__, __LINE__, $this->database->error);
+			return false;
+		}
+		return true;
+
+	}
+
 }
 
 ?>

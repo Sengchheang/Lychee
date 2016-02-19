@@ -267,6 +267,98 @@ settings.setLogin = function() {
 
 }
 
+settings.setFiltering = function() {
+
+	const action = function() {
+		basicModal.close()
+		albums.refresh()
+
+		let params = {
+			resolution: $('.basicModal select#settings_filtering_resolution').val(),
+			aspectRatio: $('.basicModal select#settings_filtering_aspectRatio').val(),
+		}
+
+		api.post('Settings::setFiltering', params, function(data) {
+
+			if (data === true) {
+				lychee.filteringResolution = params.resolution
+				lychee.filteringAspectRatio = params.aspectRatio
+				lychee.load()
+			} else lychee.error(null, params, data)
+
+		})
+	}
+
+	const reset = function() {
+		basicModal.close()
+		albums.refresh()
+
+		let params = {
+			resolution: '1',
+			aspectRatio: '1',
+			tags: ''
+		}
+
+		api.post('Settings::setFiltering', params, function(data) {
+
+			if (data === true) {
+				lychee.filteringResolution = params.resolution
+				lychee.filteringAspectRatio = params.aspectRatio
+				lychee.load()
+			} else lychee.error(null, params, data)
+
+		})
+	}
+
+	let msg = `
+			<p>
+				Filter photos by Resolution
+				<span class="select">
+					<select id='settings_filtering_resolution'>
+						<option value='1'>Any size</option>
+						<option value='width >= 1600'>Large</option>
+						<option value='width >= 800 AND width < 1600'>Medium</option>
+						<option value='width < 800'>Small</option>
+					</select>
+				</span>
+			</p>
+			<p>
+				Filter photos by Aspect Ratio
+				<span class="select">
+					<select id='settings_filtering_aspectRatio'>
+						<option value='1'>Any orientation</option>
+						<option value='width < height'>Portrait</option>
+						<option value='width > height'>Landscape</option>
+						<option value='width = height'>Square</option>
+					</select>
+				</span>
+			</p>
+			`
+
+	basicModal.show({
+		body: msg,
+		buttons: {
+			action: {
+				title: 'Change Filtering',
+				fn: action
+			},
+			cancel: {
+				title: 'Clear',
+				fn: reset
+			}
+		}
+	})
+
+	if (lychee.filteringResolution!=='1') {
+		$('.basicModal select#settings_filtering_resolution').val(lychee.filteringResolution)
+	}
+
+	if (lychee.filteringAspectRatio!=='1') {
+		$('.basicModal select#settings_filtering_aspectRatio').val(lychee.filteringAspectRatio)
+	}
+
+}
+
 settings.setSorting = function() {
 
 	let sortingPhotos = [],
